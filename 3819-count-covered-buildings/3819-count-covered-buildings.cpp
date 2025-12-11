@@ -1,33 +1,28 @@
-const int SZ=100001;
-int xMin[SZ], xMax[SZ], yMin[SZ], yMax[SZ];
 class Solution {
 public:
     int countCoveredBuildings(int n, vector<vector<int>>& buildings) {
-        int M=0, N=0;
-        for(auto& B: buildings){
-            const int x=B[0], y=B[1];
-            M=max(x, M);
-            N=max(y, N);
-        }
-        memset(xMax, 0, sizeof(int)*(N+1));
-        memset(yMax, 0, sizeof(int)*(M+1));
-        fill(xMin, xMin+(N+1), INT_MAX);
-        fill(yMin, yMin+(M+1), INT_MAX);
+        vector<int> maxRow(n + 1);
+        vector<int> minRow(n + 1, n + 1);
+        vector<int> maxCol(n + 1);
+        vector<int> minCol(n + 1, n + 1);
 
-        for(auto& B: buildings){
-            const int x=B[0], y=B[1];
-            xMin[y]=min(xMin[y], x);
-            xMax[y]=max(xMax[y], x);
-            yMin[x]=min(yMin[x], y);
-            yMax[x]=max(yMax[x], y);
+        for (auto& p : buildings) {
+            int x = p[0], y = p[1];
+            maxRow[y] = max(maxRow[y], x);
+            minRow[y] = min(minRow[y], x);
+            maxCol[x] = max(maxCol[x], y);
+            minCol[x] = min(minCol[x], y);
         }
-        int cnt=0;
-        for(auto& B: buildings){
-            const int x=B[0], y=B[1];
-            const bool coverX=(xMin[y]<x && x<xMax[y]);
-            const bool coverY=(yMin[x]<y && y<yMax[x]);
-            cnt+=(coverX && coverY);
+
+        int res = 0;
+        for (auto& p : buildings) {
+            int x = p[0], y = p[1];
+            if (x > minRow[y] && x < maxRow[y] && y > minCol[x] &&
+                y < maxCol[x]) {
+                res++;
+            }
         }
-        return cnt;
+
+        return res;
     }
 };
