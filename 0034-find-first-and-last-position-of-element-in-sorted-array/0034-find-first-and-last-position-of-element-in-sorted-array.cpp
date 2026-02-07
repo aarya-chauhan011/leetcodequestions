@@ -1,31 +1,52 @@
 class Solution {
 public:
+    
+    int findFirst(vector<int>& nums, int target) {
+        int low = 0, high = nums.size() - 1;
+        int ans = -1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            if (nums[mid] == target) {
+                ans = mid;
+                high = mid - 1;
+            }
+            else if (nums[mid] < target) {
+                low = mid + 1;
+            }
+            else {
+                high = mid - 1;
+            }
+        }
+        return ans;
+    }
+
+    int findLast(vector<int>& nums, int target) {
+        int low = 0, high = nums.size() - 1;
+        int ans = -1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            if (nums[mid] == target) {
+                ans = mid;
+                low = mid + 1;  
+            }
+            else if (nums[mid] < target) {
+                low = mid + 1;
+            }
+            else {
+                high = mid - 1;
+            }
+        }
+        return ans;
+    }
+
     vector<int> searchRange(vector<int>& nums, int target) {
-        vector<int> v(2, -1);
-        int n = nums.size();
-        int left = 0, right = n - 1;
-        while(left <= right) {
-            int mid = left + (right - left) / 2;
-
-            if(nums[mid] >= target)
-                right = mid - 1;
-            else
-                left = mid + 1;
-        }
-        if(left < n && nums[left] == target)
-            v[0] = left;
-        left = 0, right = n - 1;
-        while(left <= right) {
-            int mid = left + (right - left) / 2;
-
-            if(nums[mid] <= target)
-                left = mid + 1;
-            else
-                right = mid - 1;
-        }
-        if(right >= 0 && nums[right] == target)
-            v[1] = right;
-            
-        return v;
+        int first = findFirst(nums, target);
+        int last  = findLast(nums, target);
+        return {first, last};
     }
 };
+
